@@ -9,7 +9,7 @@ STATE_FILE = DATA_DIR / "state.json"
 
 try:
     from dotenv import load_dotenv
-    load_dotenv(dotenv_path=BASE_DIR / ".env")
+    load_dotenv(dotenv_path=BASE_DIR / ".env", override=True)
 except ImportError:
     pass
 
