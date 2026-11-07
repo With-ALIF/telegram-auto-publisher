@@ -1,0 +1,78 @@
+name: Telegram Auto Publisher
+
+on:
+  schedule:
+    - cron: '2 4 * * *'
+    - cron: '2 14 * * *'
+
+  workflow_dispatch:
+    inputs:
+      force_id:
+        description: 'Force publish specific Message ID (optional)'
+        required: false
+        type: string
+        default: ''
+      force_all:
+        description: 'Force publish all enabled messages scheduled for today'
+        required: false
+        type: boolean
+        default: false
+      dry_run:
+        description: 'Run simulation without sending messages to Telegram'
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: telegram-auto-publisher
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish Scheduled Messages
+    runs-on: ubuntu-latest
+
+    env:
+      BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+      CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
+      TIMEZONE: ${{ vars.TIMEZONE || secrets.TIMEZONE || 'Asia/Dhaka' }}
+      GITHUB_RUN_ID: ${{ github.run_id }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Restore publication state cache
+        uses: actions/cache@v4
+        with:
+          path: data/state.json
+          key: publisher-state-${{ github.run_id }}
+          restore-keys: |
+            publisher-state-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Telegram Publisher
+        run: |
+          ARGS=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          if [ "${{ github.event.inputs.force_all }}" = "true" ]; then
+            ARGS="$ARGS --force-all"
+          fi
+          if [ -n "${{ github.event.inputs.force_id }}" ]; then
+            ARGS="$ARGS --force-id ${{ github.event.inputs.force_id }}"
+          fi
+
+          echo "Executing: python main.py $ARGS"
+          python main.py $ARGS
