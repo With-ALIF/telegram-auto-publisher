@@ -1,8 +1,8 @@
 {
   "messages": [
     {
-      "id": "exam_reminder_1240",
-      "time": "12:40",
+      "id": "exam_reminder_1350",
+      "time": "13:50",
       "type": "photo",
       "image_url": "data/images/picture.png",
       "text": "📌 <b>রিমাইন্ডার:</b>\n\n⿻ পরীক্ষার সময় শুরু হয়ে গেছে। <b>রাত ১০ টা পর্যন্ত</b> এই পরীক্ষা দেয়া যাবে। \n যথাসম্ভব দ্রুত পরীক্ষা দেয়ার চেষ্টা করও।",
@@ -15,8 +15,8 @@
       ]
     },
     {
-      "id": "exam_reminder_1302",
-      "time": "13:02",
+      "id": "exam_reminder_1400",
+      "time": "14:00",
       "type": "photo",
       "image_url": "data/images/picture.png",
       "text": "⚠️ <b>জরুরি রিমাইন্ডার:</b>\n\n⿻ আজকের পরীক্ষা চলছে। যারা এখনো পরীক্ষা দেওনি, দেরি না করে দ্রুত পরীক্ষা সম্পন্ন করো। ⏳",
