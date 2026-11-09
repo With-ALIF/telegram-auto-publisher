@@ -14,7 +14,6 @@ VALID_TYPES = {"text", "photo", "video"}
 class MessageValidationError(ValueError):
     pass
 
-
 class MessageManager:
     def __init__(
         self,
@@ -200,6 +199,7 @@ class MessageManager:
             return [target]
 
         candidates: list[dict[str, Any]] = []
+        due_messages: list[tuple[datetime, dict[str, Any]]] = []
 
         for msg in self.messages:
             msg_id = msg["id"]
@@ -225,18 +225,17 @@ class MessageManager:
                 microsecond=0,
             )
 
-            window_start = scheduled_dt - timedelta(minutes=2)
-            window_end = scheduled_dt + timedelta(minutes=self.match_window)
+            if scheduled_dt - timedelta(minutes=10) <= now:
+                due_messages.append((scheduled_dt, msg))
 
-            if window_start <= now <= window_end:
+        if not force_all and due_messages:
+            due_messages.sort(key=lambda x: x[0])
+            latest_time = due_messages[-1][0]
+            candidates = [msg for dt, msg in due_messages if dt == latest_time]
+            for c in candidates:
                 logger.info(
-                    f"Match found: '{msg_id}' scheduled for {scheduled_time_str} "
-                    f"is within active window [{window_start.strftime('%H:%M')} - {window_end.strftime('%H:%M')}]."
-                )
-                candidates.append(msg)
-            else:
-                logger.debug(
-                    f"Message '{msg_id}' ({scheduled_time_str}) outside current window."
+                    f"Match found: '{c['id']}' scheduled for {c['time']} "
+                    f"is due for publishing (Current time: {current_time_str})."
                 )
 
         return candidates

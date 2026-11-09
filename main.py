@@ -122,6 +122,13 @@ async def run_publisher(args: argparse.Namespace) -> int:
         scheduled_time = msg["time"]
         logger.info(f"[{idx}/{len(targets)}] Processing '{msg_id}' (Scheduled: {scheduled_time})...")
 
+        sched_hour, sched_min = map(int, scheduled_time.split(":"))
+        sched_dt = current_time.replace(hour=sched_hour, minute=sched_min, second=0, microsecond=0)
+        wait_seconds = (sched_dt - Config.get_current_time()).total_seconds()
+        if 0 < wait_seconds <= 600:
+            logger.info(f"Waiting {int(wait_seconds)}s until exact scheduled time {scheduled_time}...")
+            await asyncio.sleep(wait_seconds)
+
         if args.dry_run:
             logger.info(
                 f"[DRY-RUN] Would publish '{msg_id}': type={msg['type']}, "

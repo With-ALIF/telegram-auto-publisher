@@ -36,13 +36,12 @@ class Config:
 
     @classmethod
     def get_timezone_obj(cls):
+        tz_name = cls.TIMEZONE.strip() if cls.TIMEZONE and cls.TIMEZONE.strip().lower() not in ("true", "false", "") else "Asia/Dhaka"
         try:
             from zoneinfo import ZoneInfo
-            return ZoneInfo(cls.TIMEZONE)
+            return ZoneInfo(tz_name)
         except Exception:
-            if "Dhaka" in cls.TIMEZONE or cls.TIMEZONE == "Asia/Dhaka":
-                return timezone(timedelta(hours=6))
-            return timezone.utc
+            return timezone(timedelta(hours=6))
 
     @classmethod
     def get_current_time(cls) -> datetime:

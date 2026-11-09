@@ -1,27 +1,17 @@
 name: Telegram Auto Publisher
 
 on:
+  push:
+    branches:
+      - main
   schedule:
-    - cron: '2 4 * * *'
-    - cron: '2 14 * * *'
-
+    - cron: '40 6 * * *'
+    - cron: '42 6 * * *'
+    - cron: '45 6 * * *'
+    - cron: '2 7 * * *'
+    - cron: '5 7 * * *'
+    - cron: '10 7 * * *'
   workflow_dispatch:
-    inputs:
-      force_id:
-        description: 'Force publish specific Message ID (optional)'
-        required: false
-        type: string
-        default: ''
-      force_all:
-        description: 'Force publish all enabled messages scheduled for today'
-        required: false
-        type: boolean
-        default: false
-      dry_run:
-        description: 'Run simulation without sending messages to Telegram'
-        required: false
-        type: boolean
-        default: false
 
 concurrency:
   group: telegram-auto-publisher
@@ -35,7 +25,7 @@ jobs:
     env:
       BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
       CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
-      TIMEZONE: ${{ vars.TIMEZONE || secrets.TIMEZONE || 'Asia/Dhaka' }}
+      TIMEZONE: 'Asia/Dhaka'
       GITHUB_RUN_ID: ${{ github.run_id }}
 
     steps:
@@ -63,16 +53,5 @@ jobs:
 
       - name: Run Telegram Publisher
         run: |
-          ARGS=""
-          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
-            ARGS="$ARGS --dry-run"
-          fi
-          if [ "${{ github.event.inputs.force_all }}" = "true" ]; then
-            ARGS="$ARGS --force-all"
-          fi
-          if [ -n "${{ github.event.inputs.force_id }}" ]; then
-            ARGS="$ARGS --force-id ${{ github.event.inputs.force_id }}"
-          fi
-
-          echo "Executing: python main.py $ARGS"
-          python main.py $ARGS
+          echo "Executing: python main.py"
+          python main.py
