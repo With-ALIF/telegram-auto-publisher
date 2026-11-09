@@ -225,7 +225,8 @@ class MessageManager:
                 microsecond=0,
             )
 
-            if scheduled_dt - timedelta(minutes=10) <= now:
+            window_minutes = self.match_window or 45
+            if scheduled_dt - timedelta(minutes=10) <= now <= scheduled_dt + timedelta(minutes=window_minutes):
                 due_messages.append((scheduled_dt, msg))
 
         if not force_all and due_messages:

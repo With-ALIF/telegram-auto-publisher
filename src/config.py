@@ -24,7 +24,7 @@ def mask_secret(value: str | None, visible_start: int = 4, visible_end: int = 4)
 
 class Config:
     BOT_TOKEN: str = os.getenv("BOT_TOKEN", "").strip()
-    CHANNEL_ID: str = os.getenv("CHANNEL_ID", "").strip()
+    CHANNEL_ID: str = os.getenv("CHANNEL_ID", "-1004470391693").strip()
     TIMEZONE: str = os.getenv("TIMEZONE", "Asia/Dhaka").strip()
     MATCH_WINDOW_MINUTES: int = int(os.getenv("MATCH_WINDOW_MINUTES", "45"))
     EXECUTION_ID: str = os.getenv("GITHUB_RUN_ID", os.getenv("EXECUTION_ID", "local-run")).strip()
