@@ -15,6 +15,20 @@
       ]
     },
     {
+      "id": "practice_reminder_1630",
+      "time": "16:30",
+      "type": "photo",
+      "image_url": "data/images/pic001.jpg",
+      "text": "গতকালের পরীক্ষাটি মিস করেছ? চিন্তার কোনো কারণ নেই!\n\n\nএখনই ওয়েবসাইটের Practice ট্যাবে গিয়ে যত খুশি, ততবার আনলিমিটেড পরীক্ষা দিতে পারবে। 💙",
+      "enabled": true,
+      "buttons": [
+        {
+          "text": "🔗 প্র্যাকটিস লিংক",
+          "url": "https://study.mnr.bd/dashboard/exams"
+        }
+      ]
+    },
+    {
       "id": "exam_reminder_1905",
       "time": "19:05",
       "type": "photo",
