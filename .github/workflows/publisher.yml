@@ -21,7 +21,7 @@ jobs:
 
     env:
       BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-      CHANNEL_ID: '-1004470391693'
+      CHANNEL_ID: '-1004470391693,-1004382451262'
       TIMEZONE: 'Asia/Dhaka'
       GITHUB_RUN_ID: ${{ github.run_id }}
 

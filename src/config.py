@@ -22,9 +22,17 @@ def mask_secret(value: str | None, visible_start: int = 4, visible_end: int = 4)
     return f"{value[:visible_start]}...{value[-visible_end:]}"
 
 
+def parse_channel_ids(raw_value: str | None) -> list[str]:
+    if not raw_value:
+        return []
+    return [c.strip() for c in raw_value.replace(";", ",").split(",") if c.strip()]
+
+
 class Config:
     BOT_TOKEN: str = os.getenv("BOT_TOKEN", "").strip()
-    CHANNEL_ID: str = os.getenv("CHANNEL_ID", "-1004470391693").strip()
+    _raw_channels: str = (os.getenv("CHANNEL_IDS") or os.getenv("CHANNEL_ID") or "-1004470391693,-1004382451262").strip()
+    CHANNEL_IDS: list[str] = parse_channel_ids(_raw_channels)
+    CHANNEL_ID: str = ",".join(CHANNEL_IDS)
     TIMEZONE: str = os.getenv("TIMEZONE", "Asia/Dhaka").strip()
     MATCH_WINDOW_MINUTES: int = int(os.getenv("MATCH_WINDOW_MINUTES", "45"))
     EXECUTION_ID: str = os.getenv("GITHUB_RUN_ID", os.getenv("EXECUTION_ID", "local-run")).strip()
@@ -54,8 +62,8 @@ class Config:
             missing = []
             if not cls.BOT_TOKEN:
                 missing.append("BOT_TOKEN")
-            if not cls.CHANNEL_ID:
-                missing.append("CHANNEL_ID")
+            if not cls.CHANNEL_IDS:
+                missing.append("CHANNEL_ID / CHANNEL_IDS")
 
             if missing:
                 raise ValueError(
@@ -68,6 +76,7 @@ class Config:
         return {
             "BOT_TOKEN": mask_secret(cls.BOT_TOKEN),
             "CHANNEL_ID": cls.CHANNEL_ID if cls.CHANNEL_ID else "[NOT SET]",
+            "CHANNEL_IDS": ", ".join(cls.CHANNEL_IDS) if cls.CHANNEL_IDS else "[NOT SET]",
             "TIMEZONE": cls.TIMEZONE,
             "MATCH_WINDOW_MINUTES": str(cls.MATCH_WINDOW_MINUTES),
             "EXECUTION_ID": cls.EXECUTION_ID,

@@ -125,6 +125,17 @@ class MessageManager:
             final_caption = caption or text
             buttons = item.get("buttons")
 
+            channels = item.get("channels") or item.get("channel_ids")
+            if channels is not None:
+                if isinstance(channels, str):
+                    channels = [c.strip() for c in channels.replace(";", ",").split(",") if c.strip()]
+                elif isinstance(channels, (list, tuple, set)):
+                    channels = [str(c).strip() for c in channels if str(c).strip()]
+                else:
+                    raise MessageValidationError(
+                        f"Message '{msg_id}' field 'channels' must be a list or comma-separated string."
+                    )
+
             validated.append({
                 "id": msg_id,
                 "time": time_str,
@@ -133,6 +144,7 @@ class MessageManager:
                 "caption": final_caption,
                 "media_url": media_url,
                 "buttons": buttons,
+                "channels": channels,
                 "enabled": enabled,
             })
 

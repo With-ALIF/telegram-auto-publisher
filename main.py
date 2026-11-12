@@ -51,7 +51,7 @@ async def run_publisher(args: argparse.Namespace) -> int:
     summary = Config.get_summary()
     logger.info(
         f"Environment: Timezone={summary['TIMEZONE']} | "
-        f"Channel={summary['CHANNEL_ID']} | "
+        f"Channels={summary.get('CHANNEL_IDS', summary['CHANNEL_ID'])} | "
         f"Window={summary['MATCH_WINDOW_MINUTES']}m | "
         f"ExecutionID={summary['EXECUTION_ID']}"
     )
@@ -130,8 +130,9 @@ async def run_publisher(args: argparse.Namespace) -> int:
             await asyncio.sleep(wait_seconds)
 
         if args.dry_run:
+            target_chs = msg.get("channels") or (publisher.channel_ids if publisher else Config.CHANNEL_IDS)
             logger.info(
-                f"[DRY-RUN] Would publish '{msg_id}': type={msg['type']}, "
+                f"[DRY-RUN] Would publish '{msg_id}' to {target_chs}: type={msg['type']}, "
                 f"text={msg['text'][:50]}... (No action taken)"
             )
             success_count += 1

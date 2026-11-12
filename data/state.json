@@ -1,12 +1,4 @@
 {
-  "executions": {
-    "2026-11-11": {
-      "practice_reminder_1630": {
-        "scheduled_time": "16:30",
-        "published_at": "2026-11-11T21:18:46.664860+06:00",
-        "execution_id": "local-run"
-      }
-    }
-  },
-  "last_updated": "2026-11-11T21:18:46.668004+06:00"
+  "executions": {},
+  "last_updated": null
 }
